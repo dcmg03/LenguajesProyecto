@@ -1,42 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload</title>
-    <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body>
-<div class="menubar">
-    <div class="auth-buttons">
+{% extends 'base.html' %}
 
-        <form id="loginForm">
-            <input type="text" name="username"/>
-            <input type="password" name="password"/>
-            <button type="submit">Iniciar Sesión</button>
-        </form>
+{% block title %}Subir Factura{% endblock %}
 
-        <a href="{{ url_for('signup') }}" class="signup-btn">Registrarse</a>
-
-
-    </div>
-
-
-</div>
-<div class="container">
-
-    <h1>Subir Archivo PDF</h1>
-
-
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <div class="file-input">
-            <input type="file" name="file" id="file" accept=".pdf">
-            <label for="file">Seleccionar Archivo</label>
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">Subir Factura</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" action="{{ url_for('upload') }}">
+                    <div class="form-group">
+                        <label for="file">Seleccionar archivo PDF</label>
+                        <input type="file" class="form-control-file" id="file" name="file" accept=".pdf" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Subir</button>
+                </form>
+            </div>
         </div>
-
-        <button class="submit-btn" type="submit">Subir</button>
-    </form>
+    </div>
 </div>
-</body>
-</html>
-
+{% endblock %}

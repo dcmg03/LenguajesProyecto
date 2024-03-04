@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Información de la Factura{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">Información de la Factura</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>NIT/CC</th>
+                            <th>Dirección</th>
+                            <th>Ciudad</th>
+                            <th>Consumo (kWh)</th>
+                            <th>Valor Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ cliente }}</td>
+                            <td>{{ nit_cc }}</td>
+                            <td>{{ direccion }}</td>
+                            <td>{{ ciudad }}</td>
+                            <td>{{ consumo }}</td>
+                            <td>${{ valor_total }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

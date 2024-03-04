@@ -1,12 +1,12 @@
 from flask import Flask, render_template, request, redirect
 import PyPDF2
+import re
 from PyPDF2 import PdfReader
 from requests import session
 import bcrypt
 from flask_sqlalchemy import SQLAlchemy
 # Rutas de autenticación
 from flask import request, make_response
-
 
 app = Flask(__name__, template_folder='templates')
 # Crear modelo User y tabla users en la base de datos para guardar los usuarios registrados:
@@ -20,9 +20,6 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User {self.username}>'
-
-
-
 
 
 @app.route('/login', methods=['POST'])
@@ -44,7 +41,8 @@ def login():
 def show_signup():
     return render_template('signup.html')
 
-#Recibimos el POST del formulario
+
+# Recibimos el POST del formulario
 @app.route('/signup', methods=['POST'])
 def signup():
     username = request.form['username']
@@ -84,7 +82,30 @@ def upload():
         for page in pdf_reader.pages:
             text += page.extract_text()
         pdf_file.close()
-        return text
+
+        # Expresiones regulares para extraer la información
+        cliente_regex = r'Cliente\s+(\w+\s+\w+\s+\w+)'
+        nit_cc_regex = r'Nit\.\s*C\.C\.\s*(\d+)'
+        direccion_regex = r'Dirección\s+(\w+\s+\w+\s+\w+\s*\d*\s*\-*\s*\d*)'
+        ciudad_regex = r'Ciudad\s+(\w+)'
+        consumo_regex = r'Consumo en \(KWh\)(\d+)'
+        valor_total_regex = r'VALOR TOTAL A PAGAR\s+\$(\d+)'
+
+        consumo_match = re.search(consumo_regex, text)
+        if consumo_match:
+            consumo = consumo_match.group(1)
+        else:
+            consumo = "0"  # O cualquier otro valor por defecto que desees
+        cliente = re.search(cliente_regex, text).group(1)
+        nit_cc = re.search(nit_cc_regex, text).group(1)
+        direccion = re.search(direccion_regex, text).group(1)
+        ciudad = re.search(ciudad_regex, text).group(1)
+        consumo = re.search(consumo_regex, text).group(1)
+        valor_total = re.search(valor_total_regex, text).group(1)
+
+        return render_template('tabla.html', cliente=cliente, nit_cc=nit_cc, direccion=direccion,
+                               ciudad=ciudad, consumo=consumo, valor_total=valor_total)
+
 
 print(app.url_map)
 
