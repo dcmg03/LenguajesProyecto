@@ -36,10 +36,9 @@ def upload():
         direccion_regex = r'Dirección\s+(.*?)\s+(\d+\s*[A-Za-z]*\s*[A-Za-z]+\s*\d+\s*-\s*\d+)'
 
         consumo_regex = r'Consumo\s+en\s*\(KWh\)\s*(\d+)'
-        #valor_total_regex = r'VALOR\s+TOTAL\s+A\s+PAGAR\s+\$([\d,.]+)'
-        valor_total_regex = r'VALOR\s+TOTAL\s+A\s+PAGAR\s+\$([\d,]+\.\d{2})'
 
-
+        #valor_total_regex = r'VALOR\s+TOTAL\s+A\s+PAGAR\s+\$([\d,]+\.\d{2})'
+        valor_total_regex = r'VALOR TOTAL A PAGAR\s+\$(\d+)'
         nit_cc_regex = r'Nit\.\s*C\.C\.\s*(\d+)'
         ciudad_regex = r'Ciudad\s+(\w+)'
         fecha_corte_regex = r'PAGO\s+OPORTUNO\s+ANTES\s+DE\s+(\d{1,2}\/[A-Za-z]{3}\/\d{4})'
@@ -51,7 +50,7 @@ def upload():
             if consumo_match:
                 consumo = consumo_match.group(1)
             else:
-                consumo = "0"  # O cualquier otro valor por defecto que desees
+                consumo = "0"
         except Exception as e:
             print(f"Error al buscar el consumo: {e}")
             consumo = "0"
