@@ -32,7 +32,10 @@ def upload():
 
         # Expresiones regulares para extraer la información
         cliente_regex = r'Cliente\s+(.*?)\s*Nit\.?\s*C\.?C\.?\s*(\d{1,2}\.?\d{3}\.?\d{3}-?\d{1,2})'
-        direccion_regex = r'Dirección\s+(.*?)\s*C[^a-zA-Z\d\s]?\s*(\d{1,5})'
+        direccion_regex = r'Dirección\s+(.*?)\s*(\d+\s*[A-Za-z]*\s*[A-Za-z]+\s*(?=N|Norte|S|Sur|E|Este|O|Oeste)?\s*\d+\s*-\s*\d+)'
+
+        #direccion_regex = r'Dirección\s+(.*?)\s+(\d+\s*[A-Za-z]*\s*[A-Za-z]+\s*\d+\s*-\s*\d+)'
+
         consumo_regex = r'Consumo\s+en\s*\(KWh\)\s*(\d+)'
         valor_total_regex = r'VALOR\s+TOTAL\s+A\s+PAGAR\s+\$([\d,.]+)'
         nit_cc_regex = r'Nit\.\s*C\.C\.\s*(\d+)'

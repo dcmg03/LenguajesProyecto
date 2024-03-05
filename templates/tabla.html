@@ -6,34 +6,34 @@
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header bg-primary text-white">
                 <h3 class="mb-0">Información de la Factura</h3>
             </div>
             <div class="card-body">
-                <table class="table table-striped custom-table">
+                <table class="table table-bordered table-striped">
                     <tbody>
-                        <tr class="custom-table-row">
-                            <th>Cliente</th>
+                        <tr>
+                            <th class="text-primary">Cliente</th>
                             <td>{{ cliente }}</td>
                         </tr>
-                        <tr class="custom-table-row">
-                            <th>NIT/CC</th>
+                        <tr>
+                            <th class="text-primary">NIT/CC</th>
                             <td>{{ nit_cc }}</td>
                         </tr>
-                        <tr class="custom-table-row">
-                            <th>Dirección</th>
+                        <tr>
+                            <th class="text-primary">Dirección</th>
                             <td>{{ direccion }}</td>
                         </tr>
-                        <tr class="custom-table-row">
-                            <th>Ciudad</th>
+                        <tr>
+                            <th class="text-primary">Ciudad</th>
                             <td>{{ ciudad }}</td>
                         </tr>
-                        <tr class="custom-table-row">
-                            <th>Consumo (kWh)</th>
+                        <tr>
+                            <th class="text-primary">Consumo (kWh)</th>
                             <td>{{ consumo }}</td>
                         </tr>
-                        <tr class="custom-table-row">
-                            <th>Valor Total</th>
+                        <tr>
+                            <th class="text-primary">Valor Total</th>
                             <td>
                                 {% if valor_total %}
                                 ${{ "{:.2f}".format(valor_total|float) }}
@@ -42,8 +42,8 @@
                                 {% endif %}
                             </td>
                         </tr>
-                        <tr class="custom-table-row">
-                            <th>Fecha de Corte</th>
+                        <tr>
+                            <th class="text-primary">Fecha de Corte</th>
                             <td>{{ fecha_corte }}</td>
                         </tr>
                     </tbody>
