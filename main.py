@@ -32,12 +32,14 @@ def upload():
 
         # Expresiones regulares para extraer la información
         cliente_regex = r'Cliente\s+(.*?)\s*Nit\.?\s*C\.?C\.?\s*(\d{1,2}\.?\d{3}\.?\d{3}-?\d{1,2})'
-        direccion_regex = r'Dirección\s+(.*?)\s*(\d+\s*[A-Za-z]*\s*[A-Za-z]+\s*(?=N|Norte|S|Sur|E|Este|O|Oeste)?\s*\d+\s*-\s*\d+)'
 
-        #direccion_regex = r'Dirección\s+(.*?)\s+(\d+\s*[A-Za-z]*\s*[A-Za-z]+\s*\d+\s*-\s*\d+)'
+        direccion_regex = r'Dirección\s+(.*?)\s+(\d+\s*[A-Za-z]*\s*[A-Za-z]+\s*\d+\s*-\s*\d+)'
 
         consumo_regex = r'Consumo\s+en\s*\(KWh\)\s*(\d+)'
-        valor_total_regex = r'VALOR\s+TOTAL\s+A\s+PAGAR\s+\$([\d,.]+)'
+        #valor_total_regex = r'VALOR\s+TOTAL\s+A\s+PAGAR\s+\$([\d,.]+)'
+        valor_total_regex = r'VALOR\s+TOTAL\s+A\s+PAGAR\s+\$([\d,]+\.\d{2})'
+
+
         nit_cc_regex = r'Nit\.\s*C\.C\.\s*(\d+)'
         ciudad_regex = r'Ciudad\s+(\w+)'
         fecha_corte_regex = r'PAGO\s+OPORTUNO\s+ANTES\s+DE\s+(\d{1,2}\/[A-Za-z]{3}\/\d{4})'
@@ -80,7 +82,7 @@ def upload():
 
             direccion_match = re.search(direccion_regex, text)
             if direccion_match:
-                direccion = direccion_match.group(1)
+                direccion = direccion_match.group(2)
             else:
                 direccion = ""
 
@@ -101,10 +103,11 @@ def upload():
         try:
             valor_total_match = re.search(valor_total_regex, text)
             if valor_total_match:
-                valor_total = valor_total_match.group(1) if valor_total_match else None
+                valor_total = valor_total_match.group(1) #if valor_total_match else None
             else:
                 valor_total = "0"
-            # valor_total = re.search(valor_total_regex, text).group(1)
+
+
         except Exception as e:
             print(f"Error al buscar el valor total: {e}")
             valor_total = "N/A"
