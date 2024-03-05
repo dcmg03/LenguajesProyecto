@@ -2,62 +2,9 @@ from flask import Flask, render_template, request, redirect
 import PyPDF2
 import re
 from PyPDF2 import PdfReader
-from requests import session
-import bcrypt
-from flask_sqlalchemy import SQLAlchemy
-# Rutas de autenticación
-from flask import request, make_response
+
 
 app = Flask(__name__, template_folder='templates')
-# Crear modelo User y tabla users en la base de datos para guardar los usuarios registrados:
-db = SQLAlchemy()
-
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
-
-    def __repr__(self):
-        return f'<User {self.username}>'
-
-
-@app.route('/login', methods=['POST'])
-def login():
-    username = request.form['username']
-    password = request.form['password']
-
-    user = User.query.filter_by(username=username).first()
-
-    if user and bcrypt.check_password_hash(user.password, password):
-        session['user_id'] = user.id
-        return make_response('Login exitoso')
-
-    return make_response('Usuario o contraseña incorrectos', 401)
-
-
-# Mostramos en formulario de registro
-@app.route('/signup')
-def show_signup():
-    return render_template('signup.html')
-
-
-# Recibimos el POST del formulario
-@app.route('/signup', methods=['POST'])
-def signup():
-    username = request.form['username']
-    password = request.form['password']
-
-    # Validaciones
-
-    hashed_pw = bcrypt.generate_password_hash(password)
-
-    new_user = User(username=username, password=hashed_pw)
-    db.session.add(new_user)
-    db.session.commit()
-
-    return redirect('/login')
-
 
 @app.route('/')
 def index():
@@ -84,27 +31,93 @@ def upload():
         pdf_file.close()
 
         # Expresiones regulares para extraer la información
-        cliente_regex = r'Cliente\s+(\w+\s+\w+\s+\w+)'
+        cliente_regex = r'Cliente\s+(.*?)\s*Nit\.?\s*C\.?C\.?\s*(\d{1,2}\.?\d{3}\.?\d{3}-?\d{1,2})'
+        direccion_regex = r'Dirección\s+(.*?)\s*C[^a-zA-Z\d\s]?\s*(\d{1,5})'
+        consumo_regex = r'Consumo\s+en\s*\(KWh\)\s*(\d+)'
+        valor_total_regex = r'VALOR\s+TOTAL\s+A\s+PAGAR\s+\$([\d,.]+)'
         nit_cc_regex = r'Nit\.\s*C\.C\.\s*(\d+)'
-        direccion_regex = r'Dirección\s+(\w+\s+\w+\s+\w+\s*\d*\s*\-*\s*\d*)'
         ciudad_regex = r'Ciudad\s+(\w+)'
-        consumo_regex = r'Consumo en \(KWh\)(\d+)'
-        valor_total_regex = r'VALOR TOTAL A PAGAR\s+\$(\d+)'
+        fecha_corte_regex = r'PAGO\s+OPORTUNO\s+ANTES\s+DE\s+(\d{1,2}\/[A-Za-z]{3}\/\d{4})'
 
-        consumo_match = re.search(consumo_regex, text)
-        if consumo_match:
-            consumo = consumo_match.group(1)
-        else:
-            consumo = "0"  # O cualquier otro valor por defecto que desees
-        cliente = re.search(cliente_regex, text).group(1)
-        nit_cc = re.search(nit_cc_regex, text).group(1)
-        direccion = re.search(direccion_regex, text).group(1)
-        ciudad = re.search(ciudad_regex, text).group(1)
-        consumo = re.search(consumo_regex, text).group(1)
-        valor_total = re.search(valor_total_regex, text).group(1)
+
+
+        try:
+            consumo_match = re.search(consumo_regex, text)
+            if consumo_match:
+                consumo = consumo_match.group(1)
+            else:
+                consumo = "0"  # O cualquier otro valor por defecto que desees
+        except Exception as e:
+            print(f"Error al buscar el consumo: {e}")
+            consumo = "0"
+
+        try:
+            cliente_match = re.search(cliente_regex, text)
+            if cliente_match:
+                cliente = cliente_match.group(1)
+            else:
+                cliente = ""
+
+        except Exception as e:
+            print(f"Error al buscar el cliente: {e}")
+            cliente = "N/A"
+
+        try:
+            nit_cc_match = re.search(nit_cc_regex, text)
+            if nit_cc_match:
+                nit_cc = nit_cc_match.group(1)
+            else:
+                nit_cc = ""
+
+        except Exception as e:
+            print(f"Error al buscar el NIT/CC: {e}")
+            nit_cc = "N/A"
+
+        try:
+
+            direccion_match = re.search(direccion_regex, text)
+            if direccion_match:
+                direccion = direccion_match.group(1)
+            else:
+                direccion = ""
+
+        except Exception as e:
+            print(f"Error al buscar la dirección: {e}")
+            direccion = "N/A"
+
+        try:
+            ciudad_match = re.search(ciudad_regex, text)
+            if ciudad_match:
+                ciudad = ciudad_match.group(1)
+            else:
+                ciudad = ""
+        except Exception as e:
+            print(f"Error al buscar la ciudad: {e}")
+            ciudad = "N/A"
+
+        try:
+            valor_total_match = re.search(valor_total_regex, text)
+            if valor_total_match:
+                valor_total = valor_total_match.group(1) if valor_total_match else None
+            else:
+                valor_total = "0"
+            # valor_total = re.search(valor_total_regex, text).group(1)
+        except Exception as e:
+            print(f"Error al buscar el valor total: {e}")
+            valor_total = "N/A"
+
+        try:
+            fecha_corte_match = re.search(fecha_corte_regex, text)
+            if fecha_corte_match:
+                fecha_corte = fecha_corte_match.group(1)
+            else:
+                fecha_corte = "0"
+        except Exception as e:
+            print(f"Error al buscar la fecha: {e}")
+            fecha_corte = "N/A"
 
         return render_template('tabla.html', cliente=cliente, nit_cc=nit_cc, direccion=direccion,
-                               ciudad=ciudad, consumo=consumo, valor_total=valor_total)
+                               ciudad=ciudad, consumo=consumo, valor_total=valor_total,fecha_corte=fecha_corte)
 
 
 print(app.url_map)
