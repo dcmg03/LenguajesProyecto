@@ -29,13 +29,19 @@ def upload():
         for page in pdf_reader.pages:
             text += page.extract_text()
         pdf_file.close()
+        #return text
+
 
         # Expresiones regulares para extraer la información
-        cliente_regex = r'Cliente\s+(.*?)\s*Nit\.?\s*C\.?C\.?\s*(\d{1,2}\.?\d{3}\.?\d{3}-?\d{1,2})'
+        cliente_regex = r'Cliente\s+(.*?)\s*Nit\.\s*C\.C\.\s*(\d{1,2}\.?\d{3}\.?\d{3}-?\d{1,2})'
 
-        direccion_regex = r'Dirección\s+(.*?)\s+(\d+\s*[A-Za-z]*\s*[A-Za-z]+\s*\d+\s*-\s*\d+)'
 
-        consumo_regex = r'Consumo\s+en\s*\(KWh\)\s*(\d+)'
+        #direccion_regex = r'Dirección\s+((?:Rural|Urbano)\s*[A-Z\s]+|(?:Cra\.|Carrera|C|Calle|Cl\.|Av\.|Avenida|Tv\.|Transversal|Diag\.|Diagonal)\s*\d+\s*(?:#|N|No\.?)?(?:\s*[a-zA-Z]?)\s*(?:\d+\s*[a-zA-Z]?|[a-zA-Z]+\s*\d*(?:\s*[a-zA-Z]*)*)|VR\s*[A-Z\s]+|Vereda\s*[A-Z\s]+)'
+        direccion_regex = r'Dirección\s+((?:Rural|Urbano)\s*[A-Z\s]+(?:\s*[A-Z]+\s*\d+\s*[A-Z]?\s*\d+\s*(?:#|No\.?)?(?:\s*[a-zA-Z]?)\s*(?:\d+\s*[a-zA-Z]?|[a-zA-Z]+\s*\d*(?:\s*[a-zA-Z]*)*)?)?|(?:Cra\.|Carrera|Calle|Cl\.|Av\.|Avenida|Tv\.|Transversal|Diag\.|Diagonal)\s*\d+\s*(?:#|No\.?)?(?:\s*[a-zA-Z]?)\s*(?:\d+\s*[a-zA-Z]?|[a-zA-Z]+\s*\d*(?:\s*[a-zA-Z]*)*)|VR\s*[A-Z\s]+|Vereda\s*[A-Z\s]+)'
+
+
+        #consumo_regex = r'Consumo\s+en\s*\(KWh\)\s*(\d+)'
+        consumo_regex = r'Lectura\s+AS\s+Contador-\d+\s+\d+\s+\d+\s+\d+\s+(\d+)\s+\d+\s+\d+'
 
         #valor_total_regex = r'VALOR\s+TOTAL\s+A\s+PAGAR\s+\$([\d,]+\.\d{2})'
         valor_total_regex = r'VALOR TOTAL A PAGAR\s+\$(\d+)'
@@ -81,7 +87,7 @@ def upload():
 
             direccion_match = re.search(direccion_regex, text)
             if direccion_match:
-                direccion = direccion_match.group(2)
+                direccion = direccion_match.group(1)
             else:
                 direccion = ""
 
@@ -92,7 +98,7 @@ def upload():
         try:
             ciudad_match = re.search(ciudad_regex, text)
             if ciudad_match:
-                ciudad = ciudad_match.group(1)
+                ciudad = ciudad_match.group(0)
             else:
                 ciudad = ""
         except Exception as e:
