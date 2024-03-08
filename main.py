@@ -10,14 +10,16 @@ app = Flask(__name__, template_folder='templates')
 
 cliente_regex = r'Cliente\s+(.*?)\s*Nit\.\s*C\.C\.\s*\d{1,2}\.?\d{3}\.?\d{3}-?\d{1,2}'
 
+direccion_regex = r"(?:Urbano|\bRural\b [A-Z] \d+[A-Z]?|Rural [A-Z]+(?: [A-Z]+)*) [A-Z]+ \d+[A-Z]? N \d+ - \d+"
 
-direccion_regex = r'Dirección\s+((?:Rural|Urbano)\s*[A-Z\s]+(?:\s*[A-Z]+\s*\d+\s*[A-Z]?\s*\d+\s*(?:#|No\.?)?(?:\s*[a-zA-Z]?)\s*(?:\d+\s*[a-zA-Z]?|[a-zA-Z]+\s*\d*(?:\s*[a-zA-Z]*)*)?)?|(?:Cra\.|Carrera|Calle|Cl\.|Av\.|Avenida|Tv\.|Transversal|Diag\.|Diagonal)\s*\d+\s*(?:#|No\.?)?(?:\s*[a-zA-Z]?)\s*(?:\d+\s*[a-zA-Z]?|[a-zA-Z]+\s*\d*(?:\s*[a-zA-Z]*)*)|VR\s*[A-Z\s]+|Vereda\s*[A-Z\s]+)'
+#direccion_regex = r'Dirección\s+((?:Rural|Urbano)\s*[A-Z\s]+(?:\s*[A-Z]+\s*\d+\s*[A-Z]?\s*\d+\s*(?:#|No\.?)?(?:\s*[a-zA-Z]?)\s*(?:\d+\s*[a-zA-Z]?|[a-zA-Z]+\s*\d*(?:\s*[a-zA-Z]*)*)?)?|(?:Cra\.|Carrera|Calle|Cl\.|Av\.|Avenida|Tv\.|Transversal|Diag\.|Diagonal)\s*\d+\s*(?:#|No\.?)?(?:\s*[a-zA-Z]?)\s*(?:\d+\s*[a-zA-Z]?|[a-zA-Z]+\s*\d*(?:\s*[a-zA-Z]*)*)|VR\s*[A-Z\s]+|Vereda\s*[A-Z\s]+)'
 
 
 consumo_regex = r'Lectura\s+AS\s+Contador-\d+\s+\d+\s+\d+\s+\d+\s+(\d+)\s+\d+\s+\d+'
 
-# valor_total_regex = r'VALOR\s+TOTAL\s+A\s+PAGAR\s+\$([\d,]+\.\d{2})'
-valor_total_regex = r'VALOR TOTAL A PAGAR\s+\$(\d+)'
+valor_total_regex = r"VALOR TOTAL A PAGAR \$([\d,]+)"
+
+
 nit_cc_regex = r'Nit\.\s*C\.C\.\s*(\d+)'
 ciudad_regex = r'Ciudad\s+(\w+)'
 fecha_corte_regex = r'PAGO\s+OPORTUNO\s+ANTES\s+DE\s+(\d{1,2}\/[A-Za-z]{3}\/\d{4})'
@@ -56,7 +58,7 @@ def upload():
                 consumo = "0"
         except Exception as e:
             print(f"Error al buscar el consumo: {e}")
-            consumo = "0"
+            consumo = "N/A"
 
         try:
             cliente_match = re.search(cliente_regex, text)
@@ -84,7 +86,7 @@ def upload():
 
             direccion_match = re.search(direccion_regex, text)
             if direccion_match:
-                direccion = direccion_match.group(1)
+                direccion = direccion_match.group(0)
             else:
                 direccion = ""
 
@@ -105,7 +107,8 @@ def upload():
         try:
             valor_total_match = re.search(valor_total_regex, text)
             if valor_total_match:
-                valor_total = valor_total_match.group(1)  # if valor_total_match else None
+                valor_total = valor_total_match.group(1).replace(',',',')
+                print(valor_total)
             else:
                 valor_total = "0"
 

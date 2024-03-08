@@ -12,41 +12,47 @@
             <div class="card-body">
                 <table class="table table-bordered table-striped">
                     <tbody>
-                        <tr>
-                            <th class="text-primary">Cliente</th>
-                            <td>{{ cliente }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-primary">NIT/CC</th>
-                            <td>{{ nit_cc }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-primary">Dirección</th>
-                            <td>{{ direccion }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-primary">Ciudad</th>
-                            <td>{{ ciudad }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-primary">Consumo (kWh)</th>
-                            <td>{{ consumo }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-primary">Valor Total</th>
+                    <tr>
+                        <th class="text-primary">Cliente</th>
+                        <td>{{ cliente }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-primary">NIT/CC</th>
+                        <td>{{ nit_cc }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-primary">Dirección</th>
+                        <td>{{ direccion }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-primary">Ciudad</th>
+                        <td>{{ ciudad }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-primary">Consumo (kWh)</th>
+                        <td>{{ consumo }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-primary">Valor Total</th>
 
-                            <td>
-                                {% if valor_total %}
-                                ${{ "{:.2f}".format(valor_total|float) }}
-                                {% else %}
-                                N/A
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="text-primary">Fecha de Corte</th>
-                            <td>{{ fecha_corte }}</td>
-                        </tr>
+                        <td>
+                            {% if valor_total %}
+                            ${{ valor_total }}
+                            {% else %}
+                            N/A
+                            {% endif %}
+
+                            <!--{% if valor_total %}
+                            ${{ "{:.2f}".format(valor_total|float) }}
+                            {% else %}
+                            N/A
+                            {% endif %}-->
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-primary">Fecha de Corte</th>
+                        <td>{{ fecha_corte }}</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
