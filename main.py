@@ -7,12 +7,12 @@ app = Flask(__name__, template_folder='templates')
 
 # Expresiones regulares para extraer la información
 
-
+#cliente_regex = r'Cliente\s*:\s*([\w\s.]+(?:\n[\w\s.]+)*)'
 cliente_regex = r'Cliente\s+(.*?)\s*Nit\.\s*C\.C\.\s*\d{1,2}\.?\d{3}\.?\d{3}-?\d{1,2}'
 
 direccion_regex = r"(?:Urbano|\bRural\b [A-Z] \d+[A-Z]?|Rural [A-Z]+(?: [A-Z]+)*) [A-Z]+ \d+[A-Z]? N \d+ - \d+"
 
-#direccion_regex = r'Dirección\s+((?:Rural|Urbano)\s*[A-Z\s]+(?:\s*[A-Z]+\s*\d+\s*[A-Z]?\s*\d+\s*(?:#|No\.?)?(?:\s*[a-zA-Z]?)\s*(?:\d+\s*[a-zA-Z]?|[a-zA-Z]+\s*\d*(?:\s*[a-zA-Z]*)*)?)?|(?:Cra\.|Carrera|Calle|Cl\.|Av\.|Avenida|Tv\.|Transversal|Diag\.|Diagonal)\s*\d+\s*(?:#|No\.?)?(?:\s*[a-zA-Z]?)\s*(?:\d+\s*[a-zA-Z]?|[a-zA-Z]+\s*\d*(?:\s*[a-zA-Z]*)*)|VR\s*[A-Z\s]+|Vereda\s*[A-Z\s]+)'
+#direccion_regex = r'\s+((?:Rural|Urbano)\s*[A-Z\s]+(?:\s*[A-Z]+\s*\d+\s*[A-Z]?\s*\d+\s*(?:#|No\.?)?(?:\s*[a-zA-Z]?)\s*(?:\d+\s*[a-zA-Z]?|[a-zA-Z]+\s*\d*(?:\s*[a-zA-Z]*)*)?)?|(?:Cra\.|Carrera|Calle|Cl\.|Av\.|Avenida|Tv\.|Transversal|Diag\.|Diagonal)\s*\d+\s*(?:#|No\.?)?(?:\s*[a-zA-Z]?)\s*(?:\d+\s*[a-zA-Z]?|[a-zA-Z]+\s*\d*(?:\s*[a-zA-Z]*)*)|VR\s*[A-Z\s]+|Vereda\s*[A-Z\s]+)'
 
 
 consumo_regex = r'Lectura\s+AS\s+Contador-\d+\s+\d+\s+\d+\s+\d+\s+(\d+)\s+\d+\s+\d+'
